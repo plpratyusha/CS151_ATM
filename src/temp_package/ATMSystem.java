@@ -56,7 +56,8 @@ public class ATMSystem {
 		BankOfB.getStateATM();
 		System.out.println();
 		
-		//interactive part begin
+		
+		//Interactive part begin
 		
 		
 		//VALIDITY
@@ -86,10 +87,6 @@ public class ATMSystem {
 			}
 		}
 		
-		//STILL VALIDITY: Card
-		//need to check card expiry
-		//need to check card number
-		//need to check bank_id
 		
 		//Card ask & save
 		System.out.println("Enter your card id.");
@@ -125,75 +122,68 @@ public class ATMSystem {
 		acct_pointer = atm_pointer.getBank().searchAccts(acct); //assume same mistake is not made twice
 		
 		
-		
-		
-		
 		//AUTHORIZATION
+		
 		
 		//mayhap this should be in ATM and have this bit cleaner here
 		System.out.println("The card is accepted. AUTHORIZATION begin. Please enter your password.");
 		Scanner check_pswd = new Scanner(System.in);
 		String pswd = check_pswd.next();
 		
-		if (!atm_pointer.getBank().authPassword(acct_pointer, pswd).equals("Success.")) { //if this ATM's Bank's authPassword method doesn't return "Success."
-			//return Card.
+		if (!atm_pointer.getBank().authPassword(acct_pointer, pswd)) {
 			System.out.println("This is a wrong password. Enter your password.");
-			
 			check_pswd = new Scanner(System.in);
 			pswd = check_pswd.next(); //assuming doesn't make same mistake twice
 		}
 		//at this point pswd should be the password.
-		
-		
+
+
 		//TRANSACTION
+
 		
 		//initiate transaction dialogue
 		System.out.println("Authorization is accepted. Start your transaction by entering the amount to withdraw.");
 		Scanner the_amt = new Scanner(System.in);
 		int amt = the_amt.nextInt();
-		
-		if (!atm_pointer.maxTransactionAmt(amt)) { //if amount entered is over maximum amount per transaction
-			System.out.println("This amount exceeds the maximum amount you can withdraw per transaction. Please enter the amount or quit."); //lol I don't have a quit
+
+		while (acct_pointer.getBalance() >= 0) {
+
+			if (!atm_pointer.maxTransactionAmt(amt)) { //if amount entered is over maximum amount per transaction
+				System.out.println("This amount exceeds the maximum amount you can withdraw per transaction. Please enter the amount or -1 to quit."); 
+
+				Scanner the_amt2 = new Scanner(System.in);
+				amt = the_amt2.nextInt(); //assume same mistake isn't repeated
+				
+				if (amt == -1) {
+					break;
+				}
+			}
+			//at this point the amount is accepted and Bank gets to check if the account can handle it.
+
+			if (!acct_pointer.getBank().withdrawalCheck(amt, acct_pointer)) { //if account has < amount the customer requested to withdraw
+				System.out.println("The amount exceeds the current balance. Enter another amount or -1 to quit.");
+
+				Scanner the_amt3 = new Scanner(System.in);
+				amt = the_amt3.nextInt(); //assume same mistake isn't repeated
+				
+				if (amt == -1) {
+					break;
+				}
+			}
+			//now amt is good & can be reduced
+
+			acct_pointer.getBank().withdrawalAction(amt, acct_pointer);
+			System.out.println("$" + amt + " dollars is withdrawn from your account. Your current balance is $" + acct_pointer.getBalance() + ". "
+					+ "If you have more transactions, enter the amount or -1 to quit.");
+
+			Scanner the_amt5 = new Scanner(System.in);
+			amt = the_amt5.nextInt();
 			
-			Scanner the_amt2 = new Scanner(System.in);
-			amt = the_amt2.nextInt(); //assume same mistake isn't repeated
+			if (amt == -1) {
+				break;
+			}
+
 		}
-		//at this point the amount is accepted and Bank gets to check if the account can handle it.
-		
-		if (!acct_pointer.getBank().withdrawalCheck(amt, acct_pointer)) { //if account has < amount the customer requested to withdraw
-			System.out.println("The amount exceeds the current balance. Enter another amount or quit."); //loool what quit
-			
-			Scanner the_amt3 = new Scanner(System.in);
-			amt = the_amt3.nextInt(); //assume same mistake isn't repeated
-		}
-		//now amt is good & can be reduced
-		
-		acct_pointer.getBank().withdrawalAction(amt, acct_pointer); //acct_pointer.reduceBalance(amt); works perfectly fine. Do I have to go through Bank?
-		System.out.println("$" + amt + " dollars is withdrawn from your account. Your current balance is $" + acct_pointer.getBalance());
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 	}
 }

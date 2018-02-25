@@ -7,35 +7,62 @@ public class Bank {
 	private ArrayList<ATM> atms = new ArrayList<ATM>(); //needed to be initialized
 	private String name;
 	
+	/**
+	 *  Creates Bank object with name field
+	 */
 	public Bank(String name) {
 		this.name = name;
 	}
 	
-	//returns name of Bank object
+	
+	/**
+	 *  Gets name of Bank object
+	 *  @return name of this Bank object
+	 */ 
     public String getName() {
     		return this.name;
     }
 	
-	//Bank holds ArrayList of Accounts
+    
+    /**
+	 *  Adds account to Bank object
+	 *  @param the Account to add to Bank object
+	 */ 
 	public void addAccount(Account a) {
 		this.accounts.add(a);
 	}
 	
-	//adds ATM to Bank
+	
+	/**
+	 *  Adds ATM to Bank object
+	 *  @param the ATM to add to Bank object
+	 */
 	public void addATM(ATM a) {
 		atms.add(a);
 	}
 	
-	//AUTHORIZATION
-	//checks the password; ATM needs to read this output
-	public String authPassword(Account a, String passwd) {
+	
+	//AUTHORIZATION BEGIN
+	
+	
+	/**
+	 *  Checks whether the password is correct or not
+	 *  @param the Account to check, the password
+	 *  @return true if password is correct
+	 */
+	public boolean authPassword(Account a, String passwd) {
 		if (!a.getPassword().equals(passwd)) {
-			return ("Invalid password.");
+			return false;
 		}
-		return ("Success.");
+		return true;
 	}
 	
-	//find Account object associated with a Bank given an ATM name
+	
+	/**
+	 *  Searches for Account object associated with the Bank
+	 *  @param the name of the Account
+	 *  @return the Account object if it is found
+	 */
 	public Account searchAccts(String name) {
 		for (Account a: accounts) {
 			if (a.getCardNum().equals(name)) {
@@ -46,7 +73,11 @@ public class Bank {
 	}
 	
 	
-	//find ATM object associated with a Bank given an ATM name
+	/**
+	 *  Searches for ATM object associated with the Bank
+	 *  @param the name of the ATM
+	 *  @return the ATM object if it is found
+	 */
 	public ATM searchATM(String name) {
 		for (ATM a: atms) {
 			if (a.getName().equals(name)) {
@@ -56,7 +87,15 @@ public class Bank {
 		return null;
 	}
 	
-	//TRANSACTION
+	
+	//TRANSACTION BEGINS
+	
+	
+	/**
+	 *  Checks that withdrawal is possible from a certain Account
+	 *  @param the amount to be withdrawn, Account for the transaction
+	 *  @return true if amount is within the Account's balance
+	 */
 	public boolean withdrawalCheck(int amt, Account a) {
 		if (amt <= a.getBalance()) {
 			return true;
@@ -64,12 +103,21 @@ public class Bank {
 		return false;
 	}
 	
-	//MORE TRANSACTION
+	
+	/**
+	 *  Deducts specified amount from Account's balance
+	 *  @param the amount to withdraw, the Account for the transaction
+	 *  Precondition: Account has some balance > 0, card is valid, Account information is valid
+	 *  Postcondition: Account's balance is reduced by amount specified
+	 */
 	public void withdrawalAction(int amt, Account a) {
 		a.reduceBalance(amt); //double check
 	}
 	
 	
+	/**
+	 *  Displays all fields of a Bank's ATMs (name, bank, maximum amount you can withdraw at one time)
+	 */
 	public void getStateATM() {
 		for (int i = 1; i <= atms.size(); i++) {
 			System.out.print(atms.get(i-1).getName() + ": (");
@@ -79,13 +127,12 @@ public class Bank {
 	}
 	
 	
-	//print state of Bank object
+	/**
+	 *  Displays all fields of a Bank (number of customers, account number, cash card expiration date, password, account balance)
+	 */
 	public void getStateBank() {
-		
 		System.out.println("Number of customers: " + accounts.size());
-		
 		String r = "nun";
-		
 		for(Account m: accounts) {
 			r = ("Customer with Cash Card (bankid: " + m.getBank().getName() + ", account number: (" 
 					+ m.getCardNum() + "), expires on: " + 
@@ -94,6 +141,7 @@ public class Bank {
 		}
 		
 	}
+	
 	
 	/**
      * Prints out the expiration date in a readable format
