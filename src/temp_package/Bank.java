@@ -29,6 +29,7 @@ public class Bank {
 		return ("Success.");
 	}
 	
+	//find Account object associated with a Bank given an ATM name
 	public Account searchAccts(String name) {
 		for (Account a: accounts) {
 			if (a.getCardNum().equals(name)) {

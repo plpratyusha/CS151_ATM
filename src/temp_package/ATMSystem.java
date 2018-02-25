@@ -4,6 +4,8 @@ import java.util.*;
 public class ATMSystem {
 
 	public static void main(String[] args) {
+		HashMap<String, ATM> atm_map = new HashMap<String, ATM>();
+		
 		Bank BankOfA = new Bank("BankOfA");
 		Bank BankOfB = new Bank("BankOfB");
 		
@@ -12,6 +14,12 @@ public class ATMSystem {
 		ATM ATM2_A = new ATM(50, BankOfA, "ATM2_A");
 		ATM ATM1_B = new ATM(50, BankOfB, "ATM1_B");
 		ATM ATM2_B = new ATM(50, BankOfB, "ATM2_B");
+		
+		atm_map.put(ATM1_A.getName(), ATM1_A);
+		atm_map.put(ATM2_A.getName(), ATM2_A);
+		atm_map.put(ATM1_B.getName(), ATM1_B);
+		atm_map.put(ATM2_B.getName(), ATM2_B);
+		
 
 		//Create Accounts and add Accounts + ATMs for BankOfA
 		Account acct1A = new Account("A11", BankOfA, new GregorianCalendar(2008, 12, 1), "mypasswd", 40);
@@ -60,53 +68,24 @@ public class ATMSystem {
 		ATM atm_pointer = null; //atm_pointer holds ATM object
 		
 		//find the ATM
-		if (atm.equals("ATM1_A")) {
-			atm_pointer = ATM1_A;
+		for (String key: atm_map.keySet()) {
+			if (atm.equals(key)) {
+				atm_pointer = atm_map.get(key);
+			}
 		}
-		else if (atm.equals("ATM2_A")) {
-			atm_pointer = ATM2_A;
-		}
-		else if (atm.equals("ATM1_B")) {
-			atm_pointer = ATM1_B;
-		}
-		else if (atm.equals("ATM2_B")) {
-			atm_pointer = ATM2_B;
-		}
-		else {
+		
+		if (atm_pointer == null) {
+			
 			System.out.println("Please enter a valid ATM.");
 			Scanner sc_atm2 = new Scanner(System.in);
-			String atm2 = sc_atm2.next(); //atm2 holds name of ATM
-			if (atm2.equals("ATM1_A")) {
-				atm_pointer = ATM1_A;
-			}
-			else if (atm2.equals("ATM2_A")) {
-				atm_pointer = ATM2_A;
-			}
-			else if (atm2.equals("ATM1_B")) {
-				atm_pointer = ATM1_B;
-			}
-			else {
-				atm_pointer = ATM2_B;
+			atm = sc_atm2.next(); //atm2 holds name of ATM
+			
+			for (String key: atm_map.keySet()) {
+				if (atm.equals(key)) {
+					atm_pointer = atm_map.get(key);
+				}
 			}
 		}
-		
-		/*
-		if (BankOfA.searchATM(atm) == null) {
-			atm_pointer = BankOfB.searchATM(atm);
-		}
-		if (atm_pointer == null) {
-			System.out.println("Enter a valid ATM.");
-		}
-		*/
-		
-		/*
-		ATM chosenATM = null;
-		for (int i = 0; i < atms.size() && chosenATM == null; i++)
-		{
-			if (atmNum.equals(atms.get(i).getATMNum()))
-				chosenATM = atms.get(i);
-		}
-		*/
 		
 		//STILL VALIDITY 
 		//need to check card expiry
@@ -147,7 +126,14 @@ public class ATMSystem {
 			check_pswd = new Scanner(System.in);
 			pswd = check_pswd.next(); //assuming doesn't make same mistake twice
 		}
+		System.out.println("Password correct.");
 		//at this point pswd should be the password.
+		
+		if (!atm_pointer.checkCard(acct_pointer).equals("Success.")) {
+			atm_pointer.checkCard(acct_pointer);
+			//ask for input again
+		}
+		
 		//keep going if authorized
 		
 		
