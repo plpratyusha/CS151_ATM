@@ -11,11 +11,17 @@ public class Bank {
 		this.name = name;
 	}
 	
+	//returns name of Bank object
+    public String getName() {
+    		return this.name;
+    }
+	
 	//Bank holds ArrayList of Accounts
 	public void addAccount(Account a) {
 		this.accounts.add(a);
 	}
 	
+	//adds ATM to Bank
 	public void addATM(ATM a) {
 		atms.add(a);
 	}
@@ -90,7 +96,7 @@ public class Bank {
 	}
 	
 	/**
-     * Prints out the expiration date in readable format
+     * Prints out the expiration date in a readable format
      * @return the exp date in mm/dd/yy format
      */
     public String getExpDateInString(GregorianCalendar expDate)
@@ -99,10 +105,6 @@ public class Bank {
         String month = Integer.toString(expDate.get(Calendar.MONTH) +1);
         String day = Integer.toString(expDate.get(Calendar.DAY_OF_MONTH));
         return month + "/" + day + "/" + year;
-    }
-    
-    public String getName() {
-    		return this.name;
     }
 	
 }

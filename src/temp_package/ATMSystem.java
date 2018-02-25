@@ -75,7 +75,6 @@ public class ATMSystem {
 		}
 		
 		if (atm_pointer == null) {
-			
 			System.out.println("Please enter a valid ATM.");
 			Scanner sc_atm2 = new Scanner(System.in);
 			atm = sc_atm2.next(); //atm2 holds name of ATM
@@ -87,7 +86,7 @@ public class ATMSystem {
 			}
 		}
 		
-		//STILL VALIDITY 
+		//STILL VALIDITY: Card
 		//need to check card expiry
 		//need to check card number
 		//need to check bank_id
@@ -100,16 +99,33 @@ public class ATMSystem {
 
 		acct_pointer = atm_pointer.getBank().searchAccts(acct); //gets Bank associated with this Account, finds it in Bank
 		
+		//if card number is incorrectly entered
 		if (acct_pointer == null) {
 			System.out.println("Please enter a valid card.");
-			
-			//accept input again
 			sc_acct = new Scanner(System.in);
 			acct = sc_acct.next();
-
-			acct_pointer = atm_pointer.getBank().searchAccts(acct); //assume same mistake is not made twice
 		}
-		//can have while loop
+		
+		//if bank_id of card is wrong
+		if (atm_pointer.checkBankId(acct_pointer) == false) {
+			System.out.println("This card is not supported by this ATM. Please enter a valid card.");
+			
+			sc_acct = new Scanner(System.in);
+			acct = sc_acct.next();
+		}
+		
+		//if card is expired
+		if (atm_pointer.checkExp(acct_pointer) == false) {
+			System.out.println("This card is expired and returned to you. Please enter a valid card.");
+			
+			sc_acct = new Scanner(System.in);
+			acct = sc_acct.next();
+		}
+		
+		acct_pointer = atm_pointer.getBank().searchAccts(acct); //assume same mistake is not made twice
+		
+		
+		
 		
 		
 		//AUTHORIZATION
@@ -126,15 +142,7 @@ public class ATMSystem {
 			check_pswd = new Scanner(System.in);
 			pswd = check_pswd.next(); //assuming doesn't make same mistake twice
 		}
-		System.out.println("Password correct.");
 		//at this point pswd should be the password.
-		
-		if (!atm_pointer.checkCard(acct_pointer).equals("Success.")) {
-			atm_pointer.checkCard(acct_pointer);
-			//ask for input again
-		}
-		
-		//keep going if authorized
 		
 		
 		//TRANSACTION

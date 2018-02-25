@@ -26,21 +26,21 @@ public class ATM {
 		return this.max_amt;
 	}
 	
-	//checks if expiry date and bank_id are valid
-	public String checkCard(Account a) {
-		
-		//GregorianCalendar today = new GregorianCalendar(GregorianCalendar.YEAR, GregorianCalendar.MONTH, GregorianCalendar.DAY_OF_MONTH);
-		
+	//checks if expiry date is valid
+	public boolean checkExp(Account a) {
 		Calendar today = new GregorianCalendar();
-		
-		if (a.getDate().compareTo(today) < 0) {				//DOUBLE CHECK
-			return ("Error: this card is expired.");
+		if (a.getDate().before(today)) {
+			return false;
 		}
-		
+		return true;
+	}
+	
+	//checks if bank_id is valid
+	public boolean checkBankId(Account a) {
 		if (!a.getBank().equals(this.getBank())) {
-			return ("Error: This card is not supported by this ATM.");
+			return false;
 		}
-		return ("Success.");
+		return true;
 	}
 	
 	//TRANSACTION
@@ -51,8 +51,7 @@ public class ATM {
 		return true;
 	}
 	
-	public void getState(Bank b) {
-		
-	}
+	
+	
 	
 }
